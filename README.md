@@ -10,10 +10,11 @@ This project demonstrates a login microservice built in Go, integrated with Keyc
 |-------------------------------|-----------------------------------------------|------------------------------------------|
 | **Security**                  | Less secure. Sends user credentials directly to the client. | More secure. Credentials are handled by Keycloak directly. |
 | **Client Type**               | Suitable for confidential clients (e.g., backend servers). | Designed for public clients (e.g., mobile apps, SPAs). |
-| **Client Secret**             | Requires a client secret.                     | Does not require a client secret.        |
+| **Client Secret**             | Not required.                     | Not required.        |
 | **Man-in-the-Middle Protection** | Vulnerable if HTTPS is not used.              | Protects against interception with `code_verifier` and `code_challenge`. |
 | **OAuth2 Recommendation**     | Deprecated in modern OAuth2 implementations.  | Recommended by OAuth2.1 and widely adopted. |
 | **Multi-Factor Authentication (MFA)** | Not supported natively.                     | Fully supported.                         |
+| **Notes**                     | Not recommended for public clients due to security concerns. | Preferred flow for modern applications. |
 
 ## How to Use This Project
 
@@ -110,7 +111,5 @@ docker-compose up --force-recreate keycloak
 
 ### Notes
 - Always use HTTPS in production to secure communication.
-- The `grant_type=password` flow is not recommended for public clients due to security concerns.
-- The `grant_type=authorization_code` with PKCE is the preferred flow for modern applications.
 
 Enjoy exploring the project!
