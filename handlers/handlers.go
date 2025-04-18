@@ -53,55 +53,6 @@ func CreateClientHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(body)
 }
 
-func PKCELoginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var loginData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&loginData); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		return
-	}
-
-	codeVerifier := generateCodeVerifier()
-	codeChallenge := generateCodeChallenge(codeVerifier)
-
-	tokenURL := "http://localhost:8080/realms/master/protocol/openid-connect/token"
-	clientID := "<client-id>"
-
-	data := url.Values{}
-	data.Set("grant_type", "password")
-	data.Set("client_id", clientID)
-	data.Set("username", loginData.Username)
-	data.Set("password", loginData.Password)
-	data.Set("code_verifier", codeVerifier)
-	data.Set("code_challenge", codeChallenge)
-	data.Set("code_challenge_method", "S256")
-
-	req, err := http.NewRequest("POST", tokenURL, strings.NewReader(data.Encode()))
-	if err != nil {
-		http.Error(w, "Failed to create request", http.StatusInternalServerError)
-		return
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		http.Error(w, "Failed to communicate with Keycloak", http.StatusInternalServerError)
-		return
-	}
-	defer resp.Body.Close()
-
-	body, _ := io.ReadAll(resp.Body)
-	w.WriteHeader(resp.StatusCode)
-	w.Write(body)
-}
-
 func GeneratePKCEHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
