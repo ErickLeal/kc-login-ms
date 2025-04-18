@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:17.4
+    container_name: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  keycloak:
+    image: keycloak/keycloak:26.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres
+      KC_DB_URL_DATABASE: keycloak
+      KC_DB_USERNAME: myuser
+      KC_DB_PASSWORD: mypassword
+      KC_THEME: my-company-theme
+    ports:
+      - "8080:8080"
+    command: start-dev
+    depends_on:
+      - postgres
+    volumes:
+      - ./keycloak-theme:/opt/keycloak/themes/my-company-theme
+
+  login-ms:
+    image: golang:1.20
+    container_name: login-ms
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8005:8005"
+    command: ["sh", "-c", "go run main.go"]
+    depends_on:
+      - keycloak
+
+volumes:
+  postgres_data:
