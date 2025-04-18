@@ -108,8 +108,3 @@ To modify the theme, edit the files in the `keycloak-theme` directory and restar
 ```bash
 docker-compose up --force-recreate keycloak
 ```
-
-### Notes
-- Always use HTTPS in production to secure communication.
-
-Enjoy exploring the project!
