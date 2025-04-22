@@ -1,4 +1,5 @@
 # Login Microservice with Keycloak Integration
+Excalidraw proposition -> https://excalidraw.com/#json=1KMkVzXMZvnjlhI_4LbEn,zKtgAFmWf03wKPMyEipI1A
 
 This project demonstrates a login microservice built in Go, integrated with Keycloak for authentication. It supports two OAuth2 flows:
 - `grant_type=password` (Resource Owner Password Credentials Grant)
